@@ -55,7 +55,7 @@ cv::Mat SampleDetector::ResizeImage(cv::Mat &srcimg, int *newh, int *neww, int *
 }
 STATUS SampleDetector::Init()
 {        
-    std::string labelPath = "/usr/local/ev_sdk/model_1/label.txt";
+    std::string labelPath = ""/usr/local/ev_sdk/label/label.txt";
     // std::string labelPath = "/project/train/models/label.txt";
     std::ifstream ifs(labelPath);
     if (!ifs)
@@ -83,7 +83,9 @@ STATUS SampleDetector::Init()
 
     string modelPath = "/usr/local/ev_sdk/model/model.onnx";
     // string modelPath = "/project/train/models/best.onnx";
-    
+	
+    OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(mSessionOptions, 0);
+
     mSessionOptions.SetGraphOptimizationLevel(ORT_ENABLE_BASIC);
     mSession = new Session(mEnv, modelPath.c_str(), mSessionOptions);
     size_t numInputNodes = mSession->GetInputCount();
